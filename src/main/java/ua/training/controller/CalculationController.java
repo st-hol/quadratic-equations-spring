@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +16,8 @@ import ua.training.entities.Calculation;
 
 import ua.training.exceptions.CalculationException;
 import ua.training.services.CalculationService;
+
+import javax.validation.Valid;
 
 @Controller
 public class CalculationController {
@@ -26,11 +29,17 @@ public class CalculationController {
 
     @GetMapping({"/", "/welcome"})
     public String welcome(Model model) {
+        model.addAttribute("calculation", new Calculation());
         return "welcome";
     }
 
     @PostMapping(value = "/calculate")
-    public String calculate(@ModelAttribute("calculation") Calculation calculation, Model model) throws CalculationException {
+    public String calculate(@Valid Calculation calculation,
+                            BindingResult bindingResult, Model model) throws CalculationException {
+
+        if(bindingResult.hasErrors()){
+            return "welcome";
+        }
 
         BigDecimal paramA = calculation.getParamA();
         BigDecimal paramB = calculation.getParamB();
@@ -46,9 +55,10 @@ public class CalculationController {
     }
 
     @ExceptionHandler(CalculationException.class)
-    public String handleEmployeeNotFoundException(Model model, Exception exception) {
+    public String handleCalculationException(Model model, Exception exception) {
         logger.error("negative discriminant: " + exception.getMessage());
         model.addAttribute("discriminantIsNegative", true);
+        model.addAttribute("calculation", new Calculation());
         return "welcome";
     }
 

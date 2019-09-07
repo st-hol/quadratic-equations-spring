@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page isELIgnored="false" %>
 
 <html>
@@ -19,30 +20,36 @@
 <header class="header">
     <div class="overlay"></div>
     <div class="container offset-1">
-        <%--action="${pageContext.request.contextPath}/"--%>
-        <form id="report-submit-ajax-form" class="" method="POST" action="${pageContext.request.contextPath}/calculate">
 
-            <div id="ajax-succeed"></div>
+        <form:form modelAttribute="calculation" method="POST"
+                   action="${pageContext.request.contextPath}/calculate">
 
-            <div class="form-group">
-                <div class="">
-                    <input maxlength="45" minlength="1" name="paramA" id="paramA" type="text"
-                           placeholder="a" required>
-                    <span>
-                        x <sup>2</sup> +
-                    </span>
-
-                    <input maxlength="45" minlength="1" name="paramB" id="paramB" type="text"
-                           placeholder="b" required>
-                    <span>
-                        x +
-                    </span>
-
-                    <input maxlength="45" minlength="1" name="paramC" id="paramC" type="text"
-                           placeholder="c" required>
-
+            <spring:bind path="paramA">
+                <div class="form-group ${status.error ? 'has-error' : ''}">
+                    <form:input type="text" path="paramA" class="form-control" placeholder="a"
+                                autofocus="true"></form:input>
+                    <span> x <sup>2</sup> + </span>
+                    <form:errors path="paramA"></form:errors>
                 </div>
-            </div>
+            </spring:bind>
+
+            <spring:bind path="paramB">
+                <div class="form-group ${status.error ? 'has-error' : ''}">
+                    <form:input type="text" path="paramB" class="form-control" placeholder="b"
+                                autofocus="true"></form:input>
+                    <span> x + </span>
+                    <form:errors path="paramB"></form:errors>
+                </div>
+            </spring:bind>
+
+
+            <spring:bind path="paramC">
+                <div class="form-group ${status.error ? 'has-error' : ''}">
+                    <form:input type="text" path="paramC" class="form-control" placeholder="c"
+                                autofocus="true"></form:input>
+                    <form:errors path="paramC"></form:errors>
+                </div>
+            </spring:bind>
 
             <div class="form-group">
                 <div class="">
@@ -51,9 +58,15 @@
                     </button>
                 </div>
             </div>
-        </form>
+        </form:form>
+
     </div>
 </header>
+
+
+<c:if test="${wrongInput == true}">
+    <h3>Negative discriminant. Sorry bro</h3>
+</c:if>
 
 <c:if test="${discriminantIsNegative == true}">
     <h3>Negative discriminant. Sorry bro</h3>
@@ -74,5 +87,45 @@
 </body>
 
 </html>
+
+
+<%--<form:form modelAttribute="calculation" method="POST"--%>
+<%--           action="${pageContext.request.contextPath}/calculate">--%>
+
+<%--    <spring:bind path="paramA">--%>
+<%--        <div class="form-group ${status.error ? 'has-error' : ''}">--%>
+<%--            <form:input type="text" path="paramA" class="form-control" placeholder="a"--%>
+<%--                        autofocus="true"></form:input>--%>
+<%--            <span> x <sup>2</sup> + </span>--%>
+<%--            <form:errors path="paramA"></form:errors>--%>
+<%--        </div>--%>
+<%--    </spring:bind>--%>
+
+<%--    <spring:bind path="paramB">--%>
+<%--        <div class="form-group ${status.error ? 'has-error' : ''}">--%>
+<%--            <form:input type="text" path="paramB" class="form-control" placeholder="b"--%>
+<%--                        autofocus="true"></form:input>--%>
+<%--            <span> x + </span>--%>
+<%--            <form:errors path="paramB"></form:errors>--%>
+<%--        </div>--%>
+<%--    </spring:bind>--%>
+
+
+<%--    <spring:bind path="paramC">--%>
+<%--        <div class="form-group ${status.error ? 'has-error' : ''}">--%>
+<%--            <form:input type="text" path="paramC" class="form-control" placeholder="c"--%>
+<%--                        autofocus="true"></form:input>--%>
+<%--            <form:errors path="paramC"></form:errors>--%>
+<%--        </div>--%>
+<%--    </spring:bind>--%>
+
+<%--    <div class="form-group">--%>
+<%--        <div class="">--%>
+<%--            <button type="submit" class="btn btn-primary btn-sm" id="ajax-submit-btn">--%>
+<%--                calculate--%>
+<%--            </button>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</form:form>--%>
 
 
